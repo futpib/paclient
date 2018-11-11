@@ -57,7 +57,6 @@
       "no-multiple-empty-lines": "off",
       "no-redeclare": "off",
       "no-trailing-spaces": "off",
-      "no-undef": "warn",
       "no-unused-vars": "warn",
       "no-var": "off",
       "operator-linebreak": "off",

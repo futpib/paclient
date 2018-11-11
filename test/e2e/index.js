@@ -115,3 +115,19 @@ test.serial('setSinkVolumes (index, volumes)', async t => {
 
   t.deepEqual(sinkAfter.channelVolumes, newVolumes);
 });
+
+test.serial('setSinkInputVolumesByIndex (index, volumes)', async t => {
+  const { pa, connect } = t.context;
+  await connect();
+
+  const sinkInputs = await pify(pa).getSinkInputs();
+  const sinkInput = sinkInputs.find(s => s.channelVolumes.length > 1);
+  const newVolumes = sinkInput.channelVolumes.map(v => v - 1);
+
+  await pify(pa).setSinkInputVolumesByIndex(sinkInput.index, newVolumes);
+
+  const sinkInputsAfter = await pify(pa).getSinkInputs();
+  const sinkInputAfter = sinkInputsAfter.find(s => s.index === sinkInput.index);
+
+  t.deepEqual(sinkInputAfter.channelVolumes, newVolumes);
+});
