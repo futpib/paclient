@@ -67,6 +67,18 @@ test.serial('setSinkPort (name, name)', async t => {
   t.pass();
 });
 
+test.serial('setSinkPort (index, name)', async t => {
+  const { pa, connect } = t.context;
+  await connect();
+
+  const sinks = await pify(pa).getSinks();
+  const sink = sinks.find(s => s.ports.length > 0);
+  const { activePortName } = sink;
+  await pify(pa).setSinkPort(sink.index, activePortName);
+
+  t.pass();
+});
+
 test.serial('loadModule + unloadModuleByIndex', async t => {
   const { pa, connect } = t.context;
   await connect();
@@ -85,5 +97,21 @@ test.serial('loadModule + unloadModuleByIndex', async t => {
 
   const modulesAfterKill = (await pify(pa).getModules()).sort(indexComparator);
 
-  t.deepEqual(modulesAfterKill, modulesBefore);
+  t.deepEqual(modulesAfterKill.map(x => x.index), modulesBefore.map(x => x.index));
+});
+
+test.serial('setSinkVolumes (index, volumes)', async t => {
+  const { pa, connect } = t.context;
+  await connect();
+
+  const sinks = await pify(pa).getSinks();
+  const sink = sinks.find(s => s.channelVolumes.length > 1);
+  const newVolumes = sink.channelVolumes.map(v => v - 1);
+
+  await pify(pa).setSinkVolumes(sink.index, newVolumes);
+
+  const sinksAfter = await pify(pa).getSinks();
+  const sinkAfter = sinksAfter.find(s => s.index === sink.index);
+
+  t.deepEqual(sinkAfter.channelVolumes, newVolumes);
 });
