@@ -153,3 +153,15 @@ test.serial('setCardProfile (index, name)', async t => {
 
   t.pass();
 });
+
+test.serial('getCard (index)', async t => {
+  const { pa, connect } = t.context;
+  await connect();
+
+  const cards = await pify(pa).getCards();
+  const [ card ] = cards;
+
+  const card_ = await pify(pa).getCard(card.index);
+
+  t.deepEqual(card_, card);
+});
