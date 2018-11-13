@@ -131,3 +131,15 @@ test.serial('setSinkInputVolumesByIndex (index, volumes)', async t => {
 
   t.deepEqual(sinkInputAfter.channelVolumes, newVolumes);
 });
+
+test.serial('setCardProfile (index, name)', async t => {
+  const { pa, connect } = t.context;
+  await connect();
+
+  const cards = await pify(pa).getCards();
+  const [ card ] = cards;
+
+  await pify(pa).setCardProfile(card.index, card.activeProfileName);
+
+  t.pass();
+});
