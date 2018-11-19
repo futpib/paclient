@@ -165,3 +165,13 @@ test.serial('getCard (index)', async t => {
 
   t.deepEqual(card_, card);
 });
+
+test.serial('getServerInfo', async t => {
+  const { pa, connect } = t.context;
+  await connect();
+
+  const info = await pify(pa).getServerInfo();
+
+  t.truthy(info.defaultSinkName);
+  t.truthy(info.defaultSourceName);
+});
