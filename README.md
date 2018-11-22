@@ -105,6 +105,8 @@ function getFnFromType(type) {
 
     * **port** - _integer_ - Port number of the server. **Default:** `4713`
 
+    * **serverString** - _string_ - Server string in [PULSE_SERVER syntax](https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/ServerStrings/). **Default:** Autodetected
+
     * **cookie** - _mixed_ - An explicit cookie value to use when authenticating with the server. This can either be a _Buffer_ or a hex string of the appropriate length. **Default:** Autodetected
 
     * **properties** - _object_ - A set of properties to associate with the client on the server. These can be seen by other clients. **Default:** `{ application: { name: 'paclient.js' } }`
