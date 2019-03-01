@@ -14,6 +14,10 @@ test.beforeEach(async t => {
     return new Promise(resolve => pa.once('ready', resolve));
   };
 
+  pa.on('error', error => {
+    console.error(error);
+  });
+
   await connect();
 
   Object.assign(t.context, {
@@ -83,6 +87,74 @@ test.serial('setSinkPort (index, name)', async t => {
   await pa.setSinkPort(sink.index, activePortName);
 
   t.pass();
+});
+
+test.serial('setSinkPort (name, name) 2', async t => {
+  const { pa } = t.context;
+
+  const sinks = await pa.getSinks();
+
+  const sink = sinks.find(s => s.ports.length > 1);
+  const { activePortName } = sink;
+  const inactivePort = sink.ports.find(p => p.name !== activePortName);
+
+  await pa.setSinkPort(sink.name, inactivePort.name);
+
+  t.is((await pa.getSink(sink.index)).activePortName, inactivePort.name);
+
+  await pa.setSinkPort(sink.name, activePortName);
+
+  t.is((await pa.getSink(sink.index)).activePortName, activePortName);
+});
+
+test.serial('setSourcePort (name, name)', async t => {
+  const { pa } = t.context;
+
+  const sources = await pa.getSources();
+  const source = sources.find(s => s.ports.length > 0);
+  if (!source) {
+    console.warn('setSourcePort test skipped');
+    t.pass();
+    return;
+  }
+  const { activePortName } = source;
+  await pa.setSourcePort(source.name, activePortName);
+
+  t.pass();
+});
+
+test.serial('setSourcePort (index, name)', async t => {
+  const { pa } = t.context;
+
+  const sources = await pa.getSources();
+  const source = sources.find(s => s.ports.length > 0);
+  if (!source) {
+    console.warn('setSourcePort test skipped');
+    t.pass();
+    return;
+  }
+  const { activePortName } = source;
+  await pa.setSourcePort(source.index, activePortName);
+
+  t.pass();
+});
+
+test.serial('setSourcePort (name, name) 2', async t => {
+  const { pa } = t.context;
+
+  const sources = await pa.getSources();
+
+  const source = sources.find(s => s.ports.length > 1);
+  const { activePortName } = source;
+  const inactivePort = source.ports.find(p => p.name !== activePortName);
+
+  await pa.setSourcePort(source.name, inactivePort.name);
+
+  t.is((await pa.getSource(source.index)).activePortName, inactivePort.name);
+
+  await pa.setSourcePort(source.name, activePortName);
+
+  t.is((await pa.getSource(source.index)).activePortName, activePortName);
 });
 
 test.serial('loadModule + unloadModuleByIndex', async t => {
