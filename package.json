@@ -1,6 +1,6 @@
 {
   "name": "@futpib/paclient",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "author": "Brian White <mscdex@mscdex.net>",
   "description": "PulseAudio client written in pure JavaScript for node.js",
   "main": "./lib/client",
