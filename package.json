@@ -4,9 +4,6 @@
   "author": "Brian White <mscdex@mscdex.net>",
   "description": "PulseAudio client written in pure JavaScript for node.js",
   "main": "./lib/client",
-  "engines": {
-    "node": ">=6.0.0"
-  },
   "keywords": [
     "pulseaudio",
     "audio",
@@ -25,11 +22,11 @@
     "url": "http://github.com/mscdex/paclient.git"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
-    "eslint-config-xo-overrides": "^1.1.2",
-    "nyc": "^13.1.0",
-    "pify": "^4.0.1",
-    "xo": "^0.23.0"
+    "ava": "^3.13.0",
+    "eslint-config-xo-overrides": "^1.4.0",
+    "nyc": "^15.1.0",
+    "pify": "^5.0.0",
+    "xo": "^0.33.1"
   },
   "scripts": {
     "test": "xo && nyc ava"

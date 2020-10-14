@@ -1,9 +1,9 @@
 
-import test from 'ava';
+const test = require('ava');
 
-import pify from 'pify';
+const pify = require('pify');
 
-import PAClient from '../../';
+const PAClient = require('../../');
 
 const indexComparator = (a, b) => a.index - b.index;
 
@@ -11,7 +11,9 @@ test.beforeEach(async t => {
   const pa = new PAClient();
   const connect = () => {
     pa.connect();
-    return new Promise(resolve => pa.once('ready', resolve));
+    return new Promise(resolve => {
+      pa.once('ready', resolve);
+    });
   };
 
   pa.on('error', error => {
@@ -40,9 +42,10 @@ test.serial('moveSourceOutput (index, index)', async t => {
 
   const sourceOutputs = await pa.getSourceOutputs();
   const sourceOutput = sourceOutputs.find(so => so.sourceIndex >= 0);
-  await pa.moveSourceOutput(sourceOutput.index, sourceOutput.sourceIndex);
 
-  t.pass();
+  t.truthy(sourceOutput);
+
+  await pa.moveSourceOutput(sourceOutput.index, sourceOutput.sourceIndex);
 });
 
 test.serial('moveSourceOutput (index, name)', async t => {
@@ -51,10 +54,11 @@ test.serial('moveSourceOutput (index, name)', async t => {
   const sourceOutputs = await pa.getSourceOutputs();
   const sources = await pa.getSources();
   const sourceOutput = sourceOutputs.find(so => so.sourceIndex >= 0);
+
+  t.truthy(sourceOutput);
+
   const source = sources.find(s => s.index === sourceOutput.sourceIndex);
   await pa.moveSourceOutput(sourceOutput.index, source.name);
-
-  t.pass();
 });
 
 test.serial('setSinkPort (name, name)', async t => {
@@ -67,6 +71,7 @@ test.serial('setSinkPort (name, name)', async t => {
     t.pass();
     return;
   }
+
   const { activePortName } = sink;
   await pa.setSinkPort(sink.name, activePortName);
 
@@ -83,6 +88,7 @@ test.serial('setSinkPort (index, name)', async t => {
     t.pass();
     return;
   }
+
   const { activePortName } = sink;
   await pa.setSinkPort(sink.index, activePortName);
 
@@ -117,6 +123,7 @@ test.serial('setSourcePort (name, name)', async t => {
     t.pass();
     return;
   }
+
   const { activePortName } = source;
   await pa.setSourcePort(source.name, activePortName);
 
@@ -133,6 +140,7 @@ test.serial('setSourcePort (index, name)', async t => {
     t.pass();
     return;
   }
+
   const { activePortName } = source;
   await pa.setSourcePort(source.index, activePortName);
 
@@ -197,6 +205,9 @@ test.serial('setSinkInputVolumesByIndex (index, volumes)', async t => {
 
   const sinkInputs = await pa.getSinkInputs();
   const sinkInput = sinkInputs.find(s => s.channelVolumes.length > 1);
+
+  t.truthy(sinkInput);
+
   const newVolumes = sinkInput.channelVolumes.map(v => v - 1);
 
   await pa.setSinkInputVolumesByIndex(sinkInput.index, newVolumes);
